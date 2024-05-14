@@ -94,8 +94,13 @@ FString UChatClientComponent::ReceiveMessage()
         m_Socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), BytesRead);
         if (BytesRead > 0)
         {
-            // TCHAR 배열을 FString으로 변환하여 반환
-            return FString(UTF8_TO_TCHAR(ReceivedData.GetData()));
+            // FString을 생성하고 데이터를 추가하여 반환
+            FString ReceivedString;
+            for (uint8 Byte : ReceivedData)
+            {
+                ReceivedString.AppendChar(static_cast<TCHAR>(Byte));
+            }
+            return ReceivedString;
         }
     }
     return FString(); // 데이터를 받지 못한 경우 빈 문자열 반환
